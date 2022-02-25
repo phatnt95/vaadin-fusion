@@ -5,6 +5,7 @@ import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.theme.Theme;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 /**
  * The entry point of the Spring Boot application.
@@ -14,12 +15,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  *
  */
 @SpringBootApplication
+@EnableJpaRepositories
 @Theme(value = "vaadinfusion")
 @PWA(name = "Vaadin Fusion", shortName = "Vaadin Fusion", offlineResources = {"images/logo.png"})
-public class Application implements AppShellConfigurator {
+public class VaadinFusionCrmApplication implements AppShellConfigurator {
 
     public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+        SpringApplication.run(VaadinFusionCrmApplication.class, args);
     }
 
 }

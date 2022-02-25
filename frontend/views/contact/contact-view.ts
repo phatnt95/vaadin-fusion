@@ -1,28 +1,89 @@
 import { html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { View } from '../../views/view';
+import '@vaadin/text-field';
+import '@vaadin/button';
+import '@vaadin/grid';
+import '@vaadin/grid/vaadin-grid-column';
+import './contact-form.ts';
+import { crmStore, uiStore } from 'Frontend/stores/app-store';
+import { Binder } from '@vaadin/form';
+import ContactModel from 'Frontend/generated/com/example/application/entity/ContactModel';
+import Contact from 'Frontend/generated/com/example/application/entity/Contact';
+import { listViewStore } from '../list/list-view-store';
 
 @customElement('contact-view')
 export class ContactView extends View {
-  render() {
-    return html`<div>
-      <img style="width: 200px;" src="images/empty-plant.png" />
-      <h2>This place intentionally left empty</h2>
-      <p>It’s a place where you can grow your own UI 🤗</p>
-    </div>`;
-  }
+	private filterText: string = '';
+	contacts: Contact[] = [];
 
-  connectedCallback() {
-    super.connectedCallback();
-    this.classList.add(
-      'flex',
-      'flex-col',
-      'h-full',
-      'items-center',
-      'justify-center',
-      'p-l',
-      'text-center',
-      'box-border'
-    );
-  }
+	constructor() {
+		super();
+		this.contacts = crmStore.contacts;
+	}
+
+	updateFilter(e: { target: HTMLInputElement }) {
+		listViewStore.updateFilter(e.target.value);
+	}
+
+	// vaadin-grid fires a null-event when initialized. Ignore it.
+	firstSelectionEvent = true;
+	handleGridSelection(e: CustomEvent) {
+		if (this.firstSelectionEvent) {
+			this.firstSelectionEvent = false;
+			return;
+		}
+		listViewStore.setSelectedContact(e.detail.value);
+	}
+
+	render() {
+		return html`
+        <div class="toolbar flex gap-s">
+            <vaadin-text-field placeholder="Filter by name" clear-button-visible 
+            .value=${listViewStore.filterText}
+            @input=${this.updateFilter}
+            >
+            </vaadin-text-field>
+            <vaadin-button @click=${listViewStore.editNew}>Add Contact</vaadin-button>
+        </div>
+        <div class="content flex gap-m h-full">
+          <vaadin-grid class="grid h-full" .items=${listViewStore.filteredContacts} .selectedItems=${[listViewStore.selectedContact]}
+		  @active-item-changed=${this.handleGridSelection}>
+              <vaadin-grid-column path="firstName" auto-width> </vaadin-grid-column>
+              <vaadin-grid-column path="lastName" auto-width> </vaadin-grid-column>
+              <vaadin-grid-column path="email" auto-width> </vaadin-grid-column>
+              <vaadin-grid-column path="status.name" header="Status" auto-width></vaadin-grid-column>
+              <vaadin-grid-column path="company.name" header="Company" auto-width></vaadin-grid-column>
+          </vaadin-grid>
+          <contact-form class="flex flex-col gap-s" ?hidden=${!listViewStore.selectedContact}></contact-form>
+        </div>
+		<vaadin-notification
+		theme=${uiStore.message.error ? 'error' : 'contrast'}
+		position="bottom-start"
+		.opened=${uiStore.message.open}
+		.renderer=${(root: HTMLElement) =>
+						(root.textContent = uiStore.message.text)}>
+		</vaadin-notification>
+    `;
+	}
+
+	connectedCallback() {
+		super.connectedCallback();
+		// this.classList.add(
+		// 	'box-border',
+		// 	'flex',
+		// 	'flex-col',
+		// 	'p-m',
+		// 	'gap-s',
+		// 	'w-full',
+		// 	'h-full'
+		// );
+		this.autorun(() => {
+			if (listViewStore.selectedContact) {
+				this.classList.add("editing");
+			} else {
+				this.classList.remove("editing");
+			}
+		});
+	}
 }
