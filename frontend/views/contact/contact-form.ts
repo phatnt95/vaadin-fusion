@@ -32,7 +32,6 @@ export class ContactForm extends View {
       <vaadin-text-field label="First name" ${field(model.firstName)}></vaadin-text-field>
       <vaadin-text-field label="Last name" ${field(model.lastName)}></vaadin-text-field>
       <vaadin-text-field label="Email" ${field(model.email)}></vaadin-text-field>
-      <vaadin-text-field label="Phone" ${field(model.phone)}></vaadin-text-field>
 
       <div class="flex gap-s">
         <vaadin-button theme="primary" @Click=${this.save}>Save</vaadin-button>

@@ -20,27 +20,31 @@ export class CrmStore {
   }
 
   async initFromServer() {
-    const data = await ContactEndpoint.getCrmData();
+    // const data = await ContactEndpoint.getCrmData();
+    const data = await ContactEndpoint.getAllContacts();
+
 
     runInAction(() => {
-      this.contacts = data.contacts;
+      // this.contacts = data.contacts;
+      console.log(data);
+      // this.contacts = data.contacts;
     });
   }
 
 
   async saveContact(contact: Contact) {
-    try {
-      const saved = await ContactEndpoint.saveContact(contact);
-      if (saved) {
-        this.saveLocal(saved);
-        uiStore.showSuccess('Contact saved.');
-      } else {
-        uiStore.showError('Contact save failed.');
-      }
-    } catch (e) {
-      console.log(e);
-      uiStore.showError('Contact save failed.');
-    }
+    // try {
+    //   const saved = await ContactEndpoint.saveContact(contact);
+    //   if (saved) {
+    //     this.saveLocal(saved);
+    //     uiStore.showSuccess('Contact saved.');
+    //   } else {
+    //     uiStore.showError('Contact save failed.');
+    //   }
+    // } catch (e) {
+    //   console.log(e);
+    //   uiStore.showError('Contact save failed.');
+    // }
   }
 
   // async deleteContact(contact: Contact) {

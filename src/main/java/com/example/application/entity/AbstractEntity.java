@@ -3,6 +3,7 @@ package com.example.application.entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @MappedSuperclass
@@ -11,7 +12,6 @@ public class AbstractEntity {
     @GeneratedValue
     private UUID id;
 
-    public String toJsonString() {
-        return "{}";
-    }
+    private LocalDate createdTime;
+    private LocalDate modifiedTime;
 }

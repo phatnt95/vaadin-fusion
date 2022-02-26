@@ -6,15 +6,16 @@ import lombok.*;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.Email;
 
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class Contact extends AbstractEntity {
+@Table(name = "leads")
+public class Lead extends AbstractEntity{
     private String firstName;
     @Nonnull
     private String lastName;
@@ -24,10 +25,9 @@ public class Contact extends AbstractEntity {
     private String email;
     @Nonnull
     private String mobile;
+    private String website;
+    private String industry;
     @ManyToOne
     @JoinColumn(name = "owner_id")
-    @Nonnull
     private User owner;
-    private String leadSource;
-
 }
